@@ -173,54 +173,11 @@ void updateQuantity(string Items[],double price[],int quantity[],int available) 
 void viewInvetory(string Items[], double price[], int quantity[], int available){
     cout<<"Sr # \t Item \t Price \t Quantity"<<endl;
     for(int i=0; i<available; i++){
-        cout << i + 1 << ": " << Items[i] << '\t' << price[i] << '\t' << quantity[i] << endl;
+        cout << i + 1 << ":\t" << Items[i] << "\t" << price[i] << '\t' << quantity[i] << endl;
     }
 }
 //---------------------------------------------------------------------------------------------//
 //function for purchasing 
-void selectItems(string cart[],string Items[],int quantity[],double price[], int& cartIndex, double& totalPrice, int& available) {
-    int choice = -1;
-    int itemsSelected = 0;
-
-    do {
-        // Display available items
-        for (int i = 0; i < available; i++) {
-            cout << i + 1 << ". " << Items[i] << " - Rs" << price[i] << " (Quantity: " << quantity[i] << ")" << endl;
-        }
-
-        cout << endl << "Enter your choice (0 to exit selection): ";
-        cin >> choice;
-
-        if (choice >= 1 && choice <= available) {
-            int index = choice - 1; // To indicate items
-            if (quantity[index] > 0) {
-                cout << "You selected: " << Items[index] << endl;
-                cart[cartIndex++] = Items[index]; // Add selected item to the cart
-                totalPrice += price[index]; // Update total price
-                quantity[index]--; // Decrease the item's quantity
-                itemsSelected++; // Increment items selected
-                cout << "Price added to total: Rs." << price[index] << endl;
-                cout << "Updated Total: Rs." << totalPrice << endl;
-                cout << "Updated Quantity of " << Items[index] << ": " << quantity[index] << endl;
-            } else {
-                cout << "Sorry, " << Items[index] << " is out of stock!" << endl;
-            }
-        } else if (choice != 0) {
-            cout << "Invalid choice!" << endl;
-        }
-    
-    } while (choice != 0);
-        cout << "Items placed in the cart:" << endl;
-        for (int i = 0; i < cartIndex; i++) {
-            cout << endl << cart[i] << endl; // Display items in the cart
-        }
-        cout << endl;
-        if (itemsSelected > 1) {
-            cout << "Total Price for " << itemsSelected << " items: Rs." << totalPrice << endl;
-        } else {
-            cout << "Total Price to pay: Rs." << totalPrice << endl;
-        }
-}
 
 
 
@@ -242,7 +199,7 @@ int main(){
     int RegId[maxSize] = {1001, 1002, 1003};
     string cart[maxSize] = {};
     double totalPrice = 0.0;
-    int cartIndex = -1;
+    int cartIndex = 0;
     //----------------------------------------------------//
     //ARRAY FOR INVENTORY
     const int max = 20;
@@ -320,7 +277,35 @@ int main(){
         }while(Login(Costumer, CostumerPass,inputName, inputPass, maxSize, place) == false);
         cout<<"Name: "<<Costumer[place]<<endl;
         cout<<"Balance: "<<balance[place]<<endl;
-        selectItems(cart,Items,quantity,price,cartIndex,totalPrice,available);
+
+        int choice = 0;
+        do {
+        for(int i=0;i<available; i++){
+            cout<<Items[i]<<"\t"<<price[i]<<"\t"<<quantity[i]<<endl;
+        }
+        cout << "What do you want to buy (enter 0 to finish): " << endl;
+        cin >> choice;
+
+        if (choice >= 1 && choice <= maxSize) {
+            balance[place] -= price[choice - 1]; 
+            quantity[choice - 1]--; // Decrease the item's quantity
+
+            cart[cartIndex++] = Items[choice - 1]; // Add selected item to the cart
+
+            cout << "YOUR CART" << endl;
+            cout<<"Items\tPrice\tQuantity"<<endl;
+            for (int i = 0; i < cartIndex; i++) {
+
+                cout << cart[i]<<"\t" <<price[choice - 1] << "\t1" << endl;
+                cout<<"----------------------------------------------------"<<endl;
+            }
+        } else if (choice != 0) {
+            cout << "Invalid choice!" << endl;
+        }
+
+    } while (choice != 0);
+
+        
 
     }
     //---------------------------------------------------------------------------------------//
